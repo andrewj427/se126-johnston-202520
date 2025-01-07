@@ -37,11 +37,13 @@ print("\tWelcome to w1 lab!\n")
 
 ans = "y"
 while ans == "y":
+    #initial variable collection
     meetingname = input("\nPlease enter the name of the meeting: ")
     max_cap = int(input("\nEnter the max amount of people allowed in the room: "))
     people = int(input("\nEnter the amount of people signed up for the meeting: "))
-
-    diff = difference(people, max_cap)
+    
+    #use differente() to calculate the amount of people over or under the cap
+    diff = difference(people, max_cap) 
 
     if diff >=0:
         print(f"\n{meetingname} meets fire safety, and you can add {diff} more participant(s).")
