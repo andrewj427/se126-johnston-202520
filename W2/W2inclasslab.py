@@ -28,7 +28,7 @@ rooms_over = 0
 with open("text_files\classLab2.csv") as csvfile:
     file = csv.reader(csvfile)
 
-    print(f"{'Room':18} \t {' Max':4} \t {'  Min':4} \t {'Over':3}")
+    print(f"{'Room':20} \t {'Max':3} \t {'Min':3} \t {'Over'}")
     #loop thru every record in the file
     for i in file:
         room = i[0]
@@ -38,7 +38,7 @@ with open("text_files\classLab2.csv") as csvfile:
         over = difference(min, max)
         if over < 0:
             over = over * -1 #make value positive
-            print(f"{room:18} \t {max:4} \t {min:5} \t {over:3}")
+            print(f"{room:20} \t {max:3} \t {min:3} \t {over}")
             rooms_over += 1 #add 1 to count of rooms over the max limit
 
         #add +1 to total_records
