@@ -52,56 +52,62 @@ with open('text_files/got_emails.csv') as csvfile:
             department.append("Research & Development") #Add each houses department
             rnd += 1
             num = 100
+            while num in extension and num < 199:
+                num += 1
             if num not in extension and num < 199: #check to make sure the extension doesn't already exist so no one has the same ext as another person
                 extension.append(num)
-            elif num in extension and num < 199:
-                num += 1
-                extension.append(num)
+            
+                
         elif i[4] == "House Targaryen":
             department.append("Marketing")
             marketing += 1
             num = 200
+            while num in extension and num < 299:
+                num += 1
             if num not in extension and num < 299:
                 extension.append(num)
-            elif num in extension and num < 299:
-                num += 1
-                extension.append(num)
+            
+                
         elif i[4] == "House Tully":
             department.append("Human Resources")
             hr += 1
             num = 300
+            while num in extension and num < 399:
+                num += 1
             if num not in extension and num < 399:
                 extension.append(num)
-            elif num in extension and num < 399:
-                num += 1
-                extension.append(num)
+            
+                
         elif i[4] == "House Lannister":
             department.append("Accounting")
             account += 1
             num = 400
+            while num in extension and num < 499:
+                num += 1
             if num not in extension and num < 499:
                 extension.append(num)
-            elif num in extension and num < 499:
-                num += 1
-                extension.append(num)
+            
+                
         elif i[4] == "House Baratheon":
             department.append("Sales")
             sales += 1
             num = 500
+            while num in extension and num < 599:
+                            num += 1
             if num not in extension and num < 599:
                 extension.append(num)
-            elif num in extension and num < 599:
-                num += 1
-                extension.append(num)
+            
+                
         elif i[4] == "The Night's Watch":
             department.append("Auditing")
             audit += 1
             num = 600
+            while num in extension and num < 699:
+                num += 1
             if num not in extension and num < 699:
                 extension.append(num)
-            elif num in extension and num < 699:
-                num += 1
-                extension.append(num)
+            
+                
         else:
             print("ERROR")
 #disconnect from file, print values
