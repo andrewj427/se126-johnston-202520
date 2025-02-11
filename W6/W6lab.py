@@ -51,18 +51,8 @@ with open("text_files/book_list.csv") as csvfile:
 
 #search menu
 
-print("-----Library search menu-----")  
-print("|1. Show all titles         |")
-print("|2. Search by title         |")
-print("|3. Search by author        |")
-print("|4. Search by genre         |")
-print("|5. Search by Library number|")
-print("|6. Show all available books|")
-print("|7. Show all books on loan  |")
-print("|8.          Exit           |")
-print("-----------------------------")
+ans = menu()
 
-ans = input("Please choose your answer: ")
 acceptable_ans = ['1', '2', '3', '4', '5', '6', '7', '8'] #put answers in a list to keep while statement small
 while ans not in acceptable_ans:
     print("\n\tInvalid entry\n")
@@ -185,9 +175,9 @@ while ans != '8':
                 print(f"|{libnum[found[i]]:5}   {title[found[i]]:35}   {author[found[i]]:15}  {genre[found[i]]:15}   {page[found[i]]:5}    {status[found[i]]:10}|")
             print("------------------------------------------------------------------------------------------------------")
         ans = menu()
+    
     elif ans == '5':
-        found = -1
-        search = int(input("Please input the library # you would like to search for: "))
+        search = input("Please input the library # you would like to search for: ")
 
         #binary search
         min = 0
@@ -195,17 +185,11 @@ while ans != '8':
         mid = int((min + max) / 2)
 
 
-        while min < max and search != int(libnum[mid]):
-            #min < max ---> list has not been exhausted of potential values yet
-            #Searchnum += lib nums[mid] --> what we are looking for is not in the mid position
-
-            if search < int(libnum[mid]): 
-                #everything after mid point is not possible
-                max = mid - 1
+        while min < max and search != libnum[mid]:
+            if search < libnum[mid]:
+                max = mid - 1 
             else:
-                #everything before mid point is not possible
                 min = mid + 1
-
             mid = int((min + max) / 2)
         
         if search == libnum[mid]:
@@ -213,12 +197,38 @@ while ans != '8':
             print("------------------------------------------------------------------------------------------------------")
             print(f"|{'lib#':5}   {'title':35}   {'author':15}  {'genre':15}   {'page':5}    {'status':10}|")
             print("|----------------------------------------------------------------------------------------------------|")
-            for i in range(0, len(found)):
-                print(f"|{libnum[mid]:5}   {title[mid]:35}   {author[mid]:15}  {genre[mid]:15}   {page[mid]:5}    {status[mid]:10}|")
+            print(f"|{libnum[mid]:5}   {title[mid]:35}   {author[mid]:15}  {genre[mid]:15}   {page[mid]:5}    {status[mid]:10}|")
             print("------------------------------------------------------------------------------------------------------")
            
         else:
             print(f"Your search for {search} was not found")
+        ans = menu()
+        
                 
-
-
+    elif ans == '6':
+        found = []
+        for i in range(0, len(status)):
+            if status[i] == "available":
+                found.append(i)
+        
+        print("------------------------------------------------------------------------------------------------------")
+        print(f"|{'lib#':5}   {'title':35}   {'author':15}  {'genre':15}   {'page':5}    {'status':10}|")
+        print("|----------------------------------------------------------------------------------------------------|")
+        for i in range(0, len(found)):
+            print(f"|{libnum[found[i]]:5}   {title[found[i]]:35}   {author[found[i]]:15}  {genre[found[i]]:15}   {page[found[i]]:5}    {status[found[i]]:10}|")
+        print("------------------------------------------------------------------------------------------------------")
+        ans = menu()
+    
+    elif ans == '7':
+        found = []
+        for i in range(0, len(status)):
+            if status[i] == "on loan":
+                found.append(i)
+        
+        print("------------------------------------------------------------------------------------------------------")
+        print(f"|{'lib#':5}   {'title':35}   {'author':15}  {'genre':15}   {'page':5}    {'status':10}|")
+        print("|----------------------------------------------------------------------------------------------------|")
+        for i in range(0, len(found)):
+            print(f"|{libnum[found[i]]:5}   {title[found[i]]:35}   {author[found[i]]:15}  {genre[found[i]]:15}   {page[found[i]]:5}    {status[found[i]]:10}|")
+        print("------------------------------------------------------------------------------------------------------")
+        ans = menu()
