@@ -28,6 +28,14 @@ def menu():
     ans = input("Please choose your answer: ")
     return ans
 
+def swap(x, y):
+    '''
+    X is the list name and Y is the index
+    '''
+    t = x[y]
+    x[y]= x[y + 1]
+    x[y + 1] = t
+    
 #Main code
 #create blank lists to store data to from the file
 clear()
@@ -59,59 +67,22 @@ while ans not in acceptable_ans:
     ans = input("Please choose your answer: ")
 while ans != '8':
     if ans == '1': 
-        #BUBBLE SORT----------------------------------------
-
-        for i in range(0, len(libnum) - 1):#outter loop
-
-            #print("OUTER LOOP! i = ", i)
-
-
-            for index in range(0, len(libnum) - 1):#inner loop
-
-                #print("\t INNER LOOP! k = ", index)
-
-                #below if statement determines the sort
-
-                #list used is the list being sorted
-
-                # > is for increasing order, < for decreasing
-
+        for i in range(0, len(title) - 1):#outter loop
+            for index in range(0, len(title) - 1):#inner loop
+        #below if statement determines the sort
+        #list used is the list being sorted
+        # > is for increasing order, < for decreasing
                 if(title[index] > title[index + 1]):
-
-                    #print("\t\t SWAP! ", title[index], "<-->", title[index + 1])
-
-                    #if above is true, swap places!
-
-                    temp = title[index]
-
-                    title[index] = title[index + 1]
-
-                    title[index + 1] = temp
-
-        
+                    swap(title, index)
                     #swap all other values
-
-                    temp = libnum[index]
-
-                    libnum[index] = libnum[index + 1]
-
-                    libnum[index + 1] = temp
-
-                    temp = author[index]
-                    author[index] = author[index + 1]
-                    author[index + 1] = temp
-
-                    temp = genre[index]
-                    genre[index] = genre[index + 1]
-                    genre[index + 1] = temp
-
-                    temp = page[index]
-                    page[index] = page[index + 1]
-                    page[index + 1] = temp
-
-                    temp = status[index]
-                    status[index] = status[index + 1]
-                    status[index + 1] = temp
+                    #temp = age[index]
+                    #age[index] = age[index + 1]
+                    #age[index + 1] = temp
+                    swap(libnum, index)
+                    swap(author, index)
+                    swap(genre, index)
+                    swap(page, index)
+                    swap(status, index)
 
 
         print("------------------------------------------------------------------------------------------------------")
@@ -177,6 +148,21 @@ while ans != '8':
         ans = menu()
     
     elif ans == '5':
+        #bubble sort again because if user shows all titles first the lib# will be out of order, so binary search won't work
+        for i in range(0, len(title) - 1):#outter loop
+            for index in range(0, len(title) - 1):#inner loop
+        #below if statement determines the sort
+        #list used is the list being sorted
+        # > is for increasing order, < for decreasing
+                if(libnum[index] > libnum[index + 1]):
+                    swap(libnum, index)
+                    swap(title, index)
+                    swap(author, index)
+                    swap(genre, index)
+                    swap(page, index)
+                    swap(status, index)
+
+
         search = input("Please input the library # you would like to search for: ")
 
         #binary search
