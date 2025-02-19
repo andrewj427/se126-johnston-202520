@@ -11,14 +11,8 @@ def swap(x, y):
 #---MAIN BUBBLE SORT CODE---
 
 for i in range(0, number_of_elements - 1):#outter loop
-    for index in range(0, number_of_elements - 1):#inner loop
-        #below if statement determines the sort
-        #list used is the list being sorted
-        # > is for increasing order, < for decreasing
-        if(name[index] > name[index + 1]):
-            swap(name, index)
-            #swap all other values
-            #temp = age[index]
-            #age[index] = age[index + 1]
-            #age[index + 1] = temp
-            swap(age, index)
+    for j in range(0, number_of_elements - 1):#inner loop
+        if(name[j] > name[j + 1]):
+            #place swap function here
+            swap(name, j)
+            
