@@ -16,6 +16,9 @@ class,currenthp,maxhp
 
 {savename}-inventory.csv
 itemname, itemclass, durability, maxdurability, dmg, defense
+
+item classes:
+weapon, armor, potion, consumable
 '''
 
 import csv
@@ -31,10 +34,15 @@ def clear():
         _ = system('clear')
 
 #Main code-------------------------------------------------------------------------------------
-dndclass = ""
-maxhp = 0
-currenthp = 0
+character = {
+    "class" : "",
+    "hp" : 0,
+    "maxhp" : 100,
+    "level" : 1,
+    "xp" : 10
+    }
 inventory = []
+#using a dict for character info and a list for inventory so that you can have repeat inventory items
 clear()
 print("\tWelcome to the DND program!\n")
 prevsave = input("do you have a save you would like to import? [y/n]: ").lower()
@@ -48,12 +56,13 @@ if prevsave == 'y':
         with open(f"courseproject-files/{username}-info.csv") as csvfile:
             file = csv.reader(csvfile)
             for i in file:
-                dndclass = i[0]
-                currenthp = int(i[1])
-                maxhp = int(i[2])
-        print(f"     Class: {dndclass}")
-        print(f"Current HP: {currenthp}")
-        print(f"Maximum HP: {maxhp}")
+                character["class"] = i[0]
+                character["hp"] = i[1]
+                character['maxhp'] = i[2]
+                character["level"] = i[3]
+                character["xp"] = i[4]
+            for key in character:
+                print(f"{key:7} : {character[key]}")
         with open(f"courseproject-files/{username}-inventory.csv") as csvfile:
             file = csv.reader(csvfile)
     except:
