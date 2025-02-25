@@ -12,9 +12,10 @@ parallel lists used to store item uses and/or durability
 SAVE FILE STRUCTURE
 
 {savename}-info.csv
-class,maxhp,currenthp
+class,currenthp,maxhp
 
 {savename}-inventory.csv
+itemname, itemclass, durability, maxdurability, dmg, defense
 '''
 
 import csv
@@ -29,20 +30,31 @@ def clear():
     else:
         _ = system('clear')
 
-
-
-
-
-
 #Main code-------------------------------------------------------------------------------------
 dndclass = ""
 maxhp = 0
 currenthp = 0
+inventory = []
 clear()
 print("\tWelcome to the DND program!\n")
 prevsave = input("do you have a save you would like to import? [y/n]: ").lower()
+while prevsave != 'y' and prevsave != 'n':
+    print("Invalid entry, please try again\n")
+    prevsave = input("do you have a save you would like to import? [y/n]: ").lower()
+
 if prevsave == 'y':
-    filepath = input("Please input the relative path of your save file here: ")
-    with open(filepath) as csvfile:
-        file = csv.reader(csvfile)
-        for i in file:
+    username = input("Please input your username here: ").lower()
+    try: #in case the user's file cannot be found, otherwise the code will break
+        with open(f"courseproject-files/{username}-info.csv") as csvfile:
+            file = csv.reader(csvfile)
+            for i in file:
+                dndclass = i[0]
+                currenthp = int(i[1])
+                maxhp = int(i[2])
+        print(f"     Class: {dndclass}")
+        print(f"Current HP: {currenthp}")
+        print(f"Maximum HP: {maxhp}")
+        with open(f"courseproject-files/{username}-inventory.csv") as csvfile:
+            file = csv.reader(csvfile)
+    except:
+        print(f"Couldn't find a file under {username}")
