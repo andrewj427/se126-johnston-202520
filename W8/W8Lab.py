@@ -107,4 +107,5 @@ while choice != '4': #if choice == 4, program will end automatically
 file = open('text_files/updated_words.csv', 'w')
 for key in words:
     file.write(f"{key},{words[key]}\n")
+file.close()
 print("Successfully wrote new entries to updated_words.csv")
