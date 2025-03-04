@@ -12,7 +12,7 @@ parallel lists used to store item uses and/or durability
 SAVE FILE STRUCTURE
 
 {savename}-info.csv
-class,currenthp,maxhp,flasks,level,xp
+class,currenthp,maxhp,flasks,level,xp,damage,defense
 
 {savename}-inventory.csv
 itemname, itemclass, equip, durability, dmg, defense
@@ -39,7 +39,7 @@ def roll(num):
 
 def levelup():
     character["level"] += 1
-    print(f"Level up! you are now level {level}!")
+    print(f"Level up! you are now level {character['level']}!")
     character["xp"] = 0
     point = input("What stat would you like to increase? [hp/dmg/defense]: ").lower()
     valid = 0
@@ -54,30 +54,50 @@ def levelup():
         else:
             print("Invalid entry, please try again")
             point = input("What stat would you like to increase? [hp/dmg/defense]: ").lower()
+
+def equipwpn():
+    global weapon
+    print("Name:                Durability:          Damage:")
+    for i in range(0, len(weaponnames)):
+        print(weaponnames)
+        print(f"{weaponnames[i][0]:20} {weaponnames[i][2]:20} {weaponnames[i][3]:20}")
+    equip = input("Would you like to equip a weapon? [y/n]: ").lower()
+    if equip == 'y':
+        choice = input("Which weapon would you like to equip?: ").lower()
+        for i in range(0, len(weaponnames)):
+            if choice == weaponnames[i][0]:
+                print(f"{weapon.name},{weapon.durability},{weapon.dmg}")
+                weaponnames.append(f"{weapon.name},{weapon.durability},{weapon.dmg}")
+                weapon = newweapon(weaponnames[i][0],weaponnames[i][2],weaponnames[i][3])
+                weaponnames.pop(i)
+                return weapon
+    elif equip == 'n':
+        weapon = newweapon("fist",999,10)
+        print("you put your weapon away and get ready to fist fight!")
 #classes---------------------------------------------------------------------------------------
 class newweapon:
     def __init__(self,name,durability,dmg):
         self.name = name
-        self.durability = durability
-        self.dmg = dmg
+        self.durability = int(durability)
+        self.dmg = int(dmg)
 
 class newarmor:
     def __init__(self,name,durability,defense):
         self.name = name
-        self.durability = durability
-        self.defense = defense
+        self.durability = int(durability)
+        self.defense = int(defense)
 
 class consumable:
     def __init__(self,name,length,effect):
         self.name = name
-        self.length = length
+        self.length = int(length)
         self.effect = effect
 
 class enemy:
     def __init__(self,name,hp,dmg):
         self.name = name
-        self.hp = hp
-        self.dmg = dmg
+        self.hp = int(hp)
+        self.dmg = int(dmg)
 
 #Main code-------------------------------------------------------------------------------------
 
@@ -88,7 +108,9 @@ character = {
     "max hp" : 100,
     "flasks" : 5,
     "level" : 1,
-    "xp" : 10
+    "xp" : 10,
+    "damage" : 5,
+    "defense" : 5
     }
 weaponnames = []
 
@@ -141,7 +163,7 @@ if prevsave == 'n':
 
 elif prevsave == 'y':
     username = input("Please input your username here: ").lower()
-    valid = 0
+valid = 0
 while valid == 0:
     try: #in case the user's file cannot be found, otherwise the code will break
         with open(f"courseproject-files/{username}-info.csv") as csvfile:
@@ -160,7 +182,6 @@ while valid == 0:
                     weapon = newweapon(i[0], i[3], i[4])
                 elif i[1] == "weapon" and i[2] != "equip":
                     weaponnames.append(i)
-                    
                 elif i[1] == "armor" and i[2] == "equip":
                     armor = newarmor(i[0], i[3], i[4])
                 elif i[1] == "armor" and i[2] != "equip":
@@ -185,62 +206,104 @@ print("-" * 28)
 
 #BATTLE-----------------------------------
 print("WARNING: if you forcefully quit the program without saving, your progress will NOT be saved!\n")
-enemychoice = roll(3) #randomly select an enemy
+ 
 #create enemies using the enemy class
-goblin = enemy("goblin", 75, 10)
-skeleton = enemy("skeleton", 50, 15)
-orc = enemy("orc", 100, 20)
-if enemychoice == 1:
-    activeenemy = goblin
-    print("A goblin has appeared!")
-elif enemychoice == 2:
-    activeenemy = skeleton
-    print("A skeleton has appeared!")
-elif enemychoice == 3:
-    activeenemy = orc
-    print("An orc has appeared!")
-    
-while int(character["hp"]) > 0 and activeenemy.hp > 0:
-    action = input("What would you like to do? [attack/inventory/heal/save]: ").lower()
-    while action != "attack" and action != "inventory" and action != "heal" and action != "save":
-        print("Invalid entry, please try again")
-        action = input("What would you like to do? [attack/inventory/heal/save]: ").lower()
+redo = 'y'
+while redo == 'y':
+    goblin = enemy("goblin", 75, armor.defense + 5)
+    skeleton = enemy("skeleton", 50, armor.defense + 10)
+    orc = enemy("orc", 100, armor.defense + 20)
+    enemychoice = roll(3)#randomly select an enemy
+    if enemychoice == 1:
+        activeenemy = goblin
+        print("A goblin has appeared!")
+    elif enemychoice == 2:
+        activeenemy = skeleton
+        print("A skeleton has appeared!")
+    elif enemychoice == 3:
+        activeenemy = orc
+        print("An orc has appeared!")
+    quit = 0
 
-    if action == "attack":
-        dmg = roll(int(weapon.dmg))
-        activeenemy.hp -= dmg
-        weapon.durability -= 1
-        if weapon.durability == 0:
-            print("Your weapon has broken!")
-            del weapon
-        print(f"You dealt {dmg} damage to the {activeenemy.name}! it has {activeenemy.hp} hp left!")
-
-    elif action == "heal":
-        if int(character["flasks"]) > 0 and character["hp"] < int((character["max hp"]) - 20):
-            character["flasks"] -= 1
-            character["hp"] += 20
-            print(f"You healed 20 hp! you have {character['hp']} hp left!")
-    elif action == "inventory":
-        inv = input("What would you like to view? [weapons/armor/potions]: ").lower()
-        while inv != "weapons" and inv != "armor" and inv != "potions":
+    while int(character["hp"]) > 0 and activeenemy.hp > 0 and redo == 'y':
+        action = input("What would you like to do? [attack/inventory/heal/save/quit]: ").lower()
+        while action != "attack" and action != "inventory" and action != "heal" and action != "save" and action != "quit":
             print("Invalid entry, please try again")
+            action = input("What would you like to do? [attack/inventory/heal/save]: ").lower()
+
+        if action == "attack":
+            dmg = roll(int(weapon.dmg))
+            activeenemy.hp -= dmg
+            weapon.durability -= 1
+            if weapon.durability == 0:
+                print("Your weapon has broken!")
+                del weapon
+                equipwpn()
+            print(f"You dealt {dmg} damage to the {activeenemy.name}! it has {activeenemy.hp} hp left!\n")
+
+        elif action == "heal":
+            if int(character["flasks"]) > 0 and character["hp"] < int((character["max hp"]) - 20):
+                character["flasks"] -= 1
+                character["hp"] += 20
+                print(f"You healed 20 hp! you have {character['hp']} hp left!")
+            elif character['flasks'] > 0 and character['hp'] > character['max hp'] - 20:
+                character['flasks'] -=1
+                character['hp'] = character['max hp']
+            elif character['flasks'] < 1 or character['hp'] == character['max hp']:
+                print("Sorry, you can't heal right now!")
+
+        elif action == "inventory":
             inv = input("What would you like to view? [weapons/armor/potions]: ").lower()
-        if inv == "weapons":
-            print("Weapons:")
-            print("Name:                Durability:          Damage:")
-            for i in range(0, len(weaponnames)):
-                print(f"{weaponnames[i][0]:20} {weaponnames[i][2]:20} {weaponnames[i][3]:20}")
-            equip = input("Would you like to equip a weapon? [y/n]: ").lower()
-            if equip == 'y':
-                choice = input("Which weapon would you like to equip?: ").lower()
-                for i in range(0, len(weaponnames)):
-                    if choice == weaponnames[i][0]:
-                        weaponnames.append(f"{weapon.name},{weapon.durability},{weapon.dmg}")
-                        weapon = newweapon(weaponnames[i][0],weaponnames[i][2],weaponnames[i][3])
-                        weaponnames.pop(i)
-print(f"The {activeenemy.name} has been defeated!")
-xp = roll(25)
-character["xp"] += xp
-print(f"You gained {xp} xp!")
-if character["xp"] == 100:
-    levelup()
+            while inv != "weapons" and inv != "armor" and inv != "potions":
+                print("Invalid entry, please try again")
+                inv = input("What would you like to view? [weapons/armor/potions]: ").lower()
+            if inv == "weapons":
+                equipwpn()
+        
+        elif action == 'save':
+            print("Saving...")
+            file = open(f"courseproject-files/{username}-info.csv", 'w')
+            file.write(f"{character['class']},{character['hp']},{character['max hp']},{character['flasks']},{character['level']},{character['damage']},{character['defense']}")
+            file.close()
+            #save inventory
+            file = open(f"courseproject-files/{username}-inventory.csv", 'w')
+            file.write(f"{weapon.name},weapon,equip,{weapon.durability},{weapon.dmg}\n")
+            file.write(f"{armor.name},armor,equip,{armor.durability},{armor.defense}\n")
+            for i in weaponnames:
+                file.write(f"\n{[i][0]},weapon,{[i][1]},{[i][2]}")
+            for i in armors:
+                print(armors)
+                file.write(f"\n{armors[i][0]},armor,{armors[i][1]},{armors[i][2]}")
+            for i in potions:
+                print(potions)
+                file.write(f"{i},potion")
+            file.close()
+        elif action == 'quit':
+            print("goodbye!")
+            redo = 'n'
+        
+        #Enemies turn
+        enemydmg = roll(activeenemy.dmg)
+        taken = (enemydmg - (character['defense'] + armor.defense))
+        if taken < 0:
+            print(f"You blocked the hit from {activeenemy.name}!\n")
+        else:
+            print(f"Armor defense: {armor.defense} character defense: {character['defense']} enemy roll: {enemydmg}")
+            character['hp'] -= taken
+            print(f"You took {taken} damage from the {activeenemy.name}! Your HP is now {character['hp']}!\n")
+
+        if activeenemy.hp < 0:
+            print(f"The {activeenemy.name} has been defeated!")
+            xp = roll(25)
+            character["xp"] += xp
+            print(f"You gained {xp} xp!")
+            if character["xp"] == 100:
+                levelup()
+            redo = input("would you like to try again? [y/n] ").lower()
+            while redo != 'y' and redo != 'n':
+                print("Invalid entry, please try again")
+                redo = input("would you like to try again? [y/n] ").lower()
+
+if character['hp'] < 0:
+    print("You have died! you can restart from your last save.")
+    
